@@ -10,6 +10,7 @@
 - [Key Files and Directories](#key-files-and-directories)
 - [main.ts](#maints)
 - [Using Fastify with NestJS](#using-fastify-with-nestjs)
+- [Controller](#controller)
 
 ## Introduction
 
@@ -110,3 +111,99 @@ async function bootstrap() {
 }
 bootstrap();
 ```
+
+## Controller
+
+A **Controller** in NestJS is responsible for handling incoming HTTP requests and returning responses to the client.
+
+### Key Features:
+
+- Handles HTTP requests.
+- Defined as a class decorated with `@Controller`.
+- Contains methods decorated with route handlers like:
+  - `@Get()`
+  - `@Post()`
+  - `@Put()`
+  - `@Delete()`
+- Uses constructor-based dependency injection to access required services.
+
+> 💡 **Tip:** You can manually create a controller file or use the CLI command:  
+> `nest g controller user`
+
+### Basic Example
+
+```bash
+
+import { Controller, Get } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('/users')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get('get-id')
+  getId(): Promise<{id:string}> {
+    return this.userService.getId();
+  }
+}
+```
+
+> 💡 **Tip:** If you want to access the `getId` method then you need to hit `http:localhost:3000/users/get-id` route
+
+### Request Object
+
+```bash
+import {Req} from '@nestjs/common'
+import {Request} from 'express'
+
+Get('/profile')
+getProfile(@Req() req:Request){
+  console.log(req.params)
+  console.log(req.query)
+  console.log(req.body)
+}
+
+```
+
+### Response Data
+
+```bash
+Get('/profile')
+getProfile(){
+  // return a response object
+  return {
+    id:1,
+    name:"Rajan"
+  }
+
+  // return a promise response
+  return new Promise((resolve,reject)=>{
+    resolve({
+      id:1,
+      name:"Rajna"
+    })
+  })
+}
+
+```
+
+### Response Status
+
+```bash
+@Post('users')
+@HttpCode(200) OR @HttpCode(HttpStatus.OK)
+createUser(){
+
+}
+
+//
+// but
+@Post('users')
+createUser(@Res() res:Response){
+  res.status(201).send({}}
+}
+
+```
+
+> 💡 **Tip:** If you want to set the status code manually but keep in mind that you need to send the res by yourself if you are using `@Res()`  
+> 💡 **Tip:** if you want to use the res object and also want nest js to send the res then you need to pass` @Res({passthrough:true})` and you can simply use return
