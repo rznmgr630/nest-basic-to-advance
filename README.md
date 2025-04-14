@@ -192,12 +192,8 @@ getProfile(){
 ```bash
 @Post('users')
 @HttpCode(200) OR @HttpCode(HttpStatus.OK)
-createUser(){
+createUser(){}
 
-}
-
-//
-// but
 @Post('users')
 createUser(@Res() res:Response){
   res.status(201).send({}}
